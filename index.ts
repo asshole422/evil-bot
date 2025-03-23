@@ -14,7 +14,11 @@ async function ExceptionHandle(exception : any, interaction : CommandInteraction
   switch (exception) {
     // add exceptions here or something
     default:
-      await interaction.reply("Unhandled exception has occurred.");
+      if (interaction.deferred) {
+        await interaction.editReply("Unhandled exception has occurred.");
+      } else {
+        await interaction.reply("Unhandled exception has occurred.");
+      }
       console.log("Unhandled exception: " + exception.toString());
   }
 }
