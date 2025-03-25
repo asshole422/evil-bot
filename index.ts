@@ -30,7 +30,7 @@ client.on('interactionCreate', (interaction) => {
   commands.forEach(async (value : Command, index : number, array : Command[]) => {
       if (value.name == interaction.commandName) {
         try {
-          await value.execute(interaction);
+          await value.runCommand(interaction);
         } catch (ex) {
           await ExceptionHandle(ex, interaction);
         }

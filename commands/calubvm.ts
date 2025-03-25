@@ -1,14 +1,17 @@
-import { Command } from "./command.ts";
+import { Command, type CommandCooldownOptions } from "./command.ts";
 import { AttachmentBuilder, CommandInteraction, EmbedBuilder, SlashCommandBuilder, User } from "discord.js"
 import type { VMInfo, CollabVMUser, ChatLogEntry } from './utils/calubvmAPI';
 import { CollabVMAPI } from './utils/calubvmAPI';
 
-// i love @ts-ignore (i am bad at typescript, i am aware)
+// i love @ts-ignore (typescript is such a crybaby smh)
+
+const cooldown_setting : CommandCooldownOptions = {has_cooldown: true, cooldown_time: 5}
 
 export class CVM_VMPreview extends Command {
     constructor(
         private botList = ["AnyOSInstallBot", "PersonalDiskBot", "Emperor Kevin"], // Array of all (official) bots from cvm
         private colorList = ["", "", "🔴", "🟢"]
+        
     ) {
         super("vm", "previews the specified vm on collabVM", new SlashCommandBuilder()
             .addStringOption(option => option
@@ -27,6 +30,7 @@ export class CVM_VMPreview extends Command {
                 .addChoices({name: "vm8", value:"vm8"})
             )
         );
+        this.cooldown_settings = cooldown_setting;
     }
 
     public async execute(interaction : CommandInteraction) {
@@ -124,7 +128,9 @@ export class CVM_VMPreview extends Command {
 }
 
 export class CVMChatCommand extends Command {
-    constructor() {
+    constructor(
+        
+    ) {
         super("chat", "Performs a chatlog lookup via CVMAPI with specified arguments.", new SlashCommandBuilder()
             .addStringOption(option => option
                 .setName("vm")

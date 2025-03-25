@@ -1,5 +1,5 @@
 import { Command } from "./command.ts"
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, User } from "discord.js"
+import { AttachmentBuilder, CommandInteraction, EmbedBuilder, SlashCommandBuilder, User } from "discord.js"
 
 export class PingCommand extends Command {
     constructor() {
@@ -45,7 +45,20 @@ export class AboutCommand extends Command {
         super("about", "about the bot itself", new SlashCommandBuilder());
     }
 
+    // TODO: add stats to it or somethin
     public async execute(interaction : CommandInteraction) {
-        await interaction.reply("i am evil. here's my [source code](https://github.com/asshole422/evil-bot) btw");
+        await interaction.reply("i am evil. here's my [source code](<https://github.com/asshole422/evil-bot>) btw");
+    }
+}
+
+export class PrayCommand extends Command {
+    constructor() {
+        super("florg", "pray to the florg, the creator of the universe", new SlashCommandBuilder());
+        this.cooldown_settings = {has_cooldown: true, cooldown_time: 3600}
+    }
+
+    public async execute(interaction: CommandInteraction): Promise<void> {
+        var the_florg : AttachmentBuilder = new AttachmentBuilder("./the florg.jpg", {name: "god.jpg"});
+        await interaction.reply({content:"the florg has blessed you. come back after an hour", files:[the_florg]});
     }
 }
