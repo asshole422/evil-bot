@@ -135,15 +135,15 @@ export class CVMChatCommand extends Command {
             .addStringOption(option => option
                 .setName("vm")
                 .setDescription("VM in question")
-                .setChoices({name: "vm0", value: "VM0"})
-                .setChoices({name: "vm1", value: "VM1"})
-                .setChoices({name: "vm2", value: "VM2"})
-                .setChoices({name: "vm3", value: "VM3"})
-                .setChoices({name: "vm4", value: "VM4"})
-                .setChoices({name: "vm5", value: "VM5"})
-                .setChoices({name: "vm6", value: "VM6"})
-                .setChoices({name: "vm7", value: "VM7"})
-                .setChoices({name: "vm8", value: "VM8"})
+                .addChoices({name: "vm0", value: "VM0"})
+                .addChoices({name: "vm1", value: "VM1"})
+                .addChoices({name: "vm2", value: "VM2"})
+                .addChoices({name: "vm3", value: "VM3"})
+                .addChoices({name: "vm4", value: "VM4"})
+                .addChoices({name: "vm5", value: "VM5"})
+                .addChoices({name: "vm6", value: "VM6"})
+                .addChoices({name: "vm7", value: "VM7"})
+                .addChoices({name: "vm8", value: "VM8"})
             )
             .addNumberOption(option => option
                 .setName("msgs")
@@ -159,44 +159,24 @@ export class CVMChatCommand extends Command {
                 .setName("username")
                 .setDescription("Username to look up")
             )
-            .addStringOption(option => option
-                .setName("from")
-                .setDescription("Filter messages after the specified timestamp. Has to be valid date string (UTC)")
-            )
-            .addStringOption(option => option
-                .setName("to")
-                .setDescription("Filter messages before the specified timestamp. Has to be valid date string (UTC)")
-            )
         );
     }
 
     public async execute(interaction : CommandInteraction) {
         // god i love typescript importer
         // @ts-ignore
-        const vmNodeID : string = interaction.options.getString("vmNode") ?? "";
+        const vmNodeID : string = interaction.options.getString("vm") ?? "";
         // @ts-ignore
         const msgs : number = interaction.options.getNumber("msgs") ?? 10;
         // @ts-ignore
         const isRand : boolean = interaction.options.getBoolean("isRandom") ?? false;
         // @ts-ignore
         const username : string = interaction.options.getString("username") ?? "";
-        // @ts-ignore
-        const from_datestr : string = interaction.options.getString("from");
-        // @ts-ignore
-        const to_datestr : string = interaction.options.getString("to");
-        var date_from : Date | undefined = undefined;
-        var date_to : Date | undefined = undefined;
 
         await interaction.deferReply();
-        if (from_datestr != null || from_datestr != "") {
-            date_from = new Date(from_datestr);
-        }
-        if (to_datestr != null || to_datestr != "") {
-            date_to = new Date(to_datestr);
-        }
         var chatData : ChatLogEntry[] | null = null;
         try {
-            chatData = await CollabVMAPI.getChatData(vmNodeID, msgs, isRand, username, date_from, date_to);
+            chatData = await CollabVMAPI.getChatData(vmNodeID, msgs, isRand, username);
         }catch (exception) {
             // @ts-ignore
             await interaction.editReply(`Request failed (Error code ${exception.statusCode})`);
@@ -205,7 +185,7 @@ export class CVMChatCommand extends Command {
         }
         
         var chatStr : string = "```\n";
-        chatData?.forEach((value : ChatLogEntry) => chatStr += `[${value.timestamp}] ${value.username}> ${value.message}`);
+        chatData?.forEach((value : ChatLogEntry) => chatStr += `[${value.timestamp}] ${value.username}> ${value.message}\n`);
         chatStr += "\n```";
 
         await interaction.editReply("Chat log obtained:\n" + chatStr);

@@ -70,26 +70,22 @@ export class CollabVMAPI {
         return inf;
     }
 
-    private static getDateStr(date : Date | undefined) : string {
-        if (date == undefined) {
-            return "";
-        }
-        return `${date.getUTCFullYear().toString()}/${date.getUTCMonth().toString()}/${date.getUTCDay().toString()} ${date.getUTCHours().toString()}:${date.getUTCMinutes().toString()}:${date.getUTCSeconds()}`
-    }
-
     // Returns chatlogs with the specified query arguments. If none provided, returns last 10 logged messages
     public static async getChatData(vmNodeID : string = "", 
                                     msgAmount : number = 10, 
                                     random : boolean = false, 
                                     username : string = "", 
-                                    date_from? : Date, 
-                                    date_to? : Date 
                                     ) : Promise<Array<ChatLogEntry> | null> {
         
-        var datef_str : string = this.getDateStr(date_from);
-        var datet_str : string = this.getDateStr(date_to);
-        var url : string = `https://cvmapi.elijahr.dev/api/v1/chatlogs?vm="${vmNodeID}"&username="${username}"&from="${datef_str}"&to="${datet_str}"&count=${msgAmount}&random=${random}`
-        const resp = await fetch(url, {method: "GET", signal: AbortSignal.timeout(540000)}) // 9 minutes (when our deferred reply is about to expire)
+        var url : string = `https://cvmapi.elijahr.dev/api/v1/chatlogs?count=${msgAmount}&random=${random}`
+        // using ifs here feels a little bit scuffed
+        if (vmNodeID != "") {
+            url += `&vm=${vmNodeID}`
+        }
+        if (username != "") {
+            url += `&username=${username}`
+        }
+        const resp = await fetch(url, {method: "GET", signal: AbortSignal.timeout(30000)})
         if (resp.status != 200) {
             throw new CollabVMAPIErr("Request failed", resp.status)
         }

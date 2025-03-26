@@ -27,7 +27,7 @@ export class Command {
         
         if (this.timestamps[interaction.user.id] != undefined) {
             const expiredTimestamp = Math.round(((this.timestamps[interaction.user.id] ?? 0) + this.cooldown_settings.cooldown_time * 1000) / 1_000);
-            await interaction.reply(`You're under cooldown. Wait <t:${expiredTimestamp}:R> to use it again.`);
+            await interaction.reply(`You're under cooldown. You can use it again <t:${expiredTimestamp}:R>`);
             return;
         }
 

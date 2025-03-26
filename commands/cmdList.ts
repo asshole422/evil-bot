@@ -7,7 +7,6 @@ export const commands : Command[] = [
   new AvatarCommand(),
   new CVM_VMPreview(),
   new AboutCommand(),
-  new PrayCommand()
-  // does not work vvvvv
-  //new CVMChatCommand()
+  new PrayCommand(),
+  new CVMChatCommand()
 ]

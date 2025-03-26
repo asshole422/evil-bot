@@ -47,8 +47,8 @@ console.log("Refreshing slash (/) commands...");
 
 try {
   // toggle me if you're testing some new commands or somethin vvvvv
-  //await rest.put(Routes.applicationGuildCommands(process.env.CLIENT ?? "", "1093230180568404050"), {"body": commands});
-  await rest.put(Routes.applicationCommands(process.env.CLIENT ?? ""), {"body": commands});
+  await rest.put(Routes.applicationGuildCommands(process.env.CLIENT ?? "", "1093230180568404050"), {"body": commands});
+  //await rest.put(Routes.applicationCommands(process.env.CLIENT ?? ""), {"body": commands});
 } catch (error) {
   console.log(error);
 }
