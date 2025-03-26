@@ -3,7 +3,6 @@ import { Command } from "./commands/command.ts";
 import { commands } from './commands/cmdList.ts';
 
 const client = new Client({intents: [GatewayIntentBits.Guilds]});
-const rest = new REST().setToken(process.env.TOKEN ?? "");
 
 // listen for the client to be ready
 client.once(Events.ClientReady, (c) => {
@@ -30,7 +29,7 @@ client.on('interactionCreate', (interaction) => {
   commands.forEach(async (value : Command, index : number, array : Command[]) => {
       if (value.name == interaction.commandName) {
         try {
-          await value.runCommand(interaction);
+          await value.runCommand(interaction, client);
         } catch (ex) {
           await ExceptionHandle(ex, interaction);
         }
@@ -44,6 +43,8 @@ commands.map((value) => {value.toJSON()});
 // Registering slash commands b4 logging in 
 
 console.log("Refreshing slash (/) commands...");
+
+const rest = new REST().setToken(process.env.TOKEN ?? "");
 
 try {
   // toggle me if you're testing some new commands or somethin vvvvv

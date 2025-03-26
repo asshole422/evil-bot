@@ -1,4 +1,4 @@
-import {SlashCommandBuilder, CommandInteraction, type SlashCommandOptionsOnlyBuilder} from 'discord.js';
+import {SlashCommandBuilder, CommandInteraction, type SlashCommandOptionsOnlyBuilder, Client} from 'discord.js';
 
 export interface CommandCooldownOptions {
     has_cooldown : boolean,
@@ -19,9 +19,9 @@ export class Command {
     
 
     // NOT an override function. One that YOU should use to run the command (since it actually implements the cooldown)
-    public async runCommand(interaction : CommandInteraction) : Promise<void> {
+    public async runCommand(interaction : CommandInteraction, client : Client) : Promise<void> {
         if (this.cooldown_settings.has_cooldown != true) {
-            await this.execute(interaction);
+            await this.execute(interaction, client);
             return;
         }
         
@@ -32,14 +32,14 @@ export class Command {
         }
 
         this.timestamps[interaction.user.id] = Date.now();
-        await this.execute(interaction);
+        await this.execute(interaction, client);
         setTimeout(() => {this.timestamps[interaction.user.id] = undefined}, this.cooldown_settings.cooldown_time * 1000);
         
 
     }
 
     // Override function
-    public async execute(interaction : CommandInteraction) : Promise<void> { }
+    public async execute(interaction : CommandInteraction, client : Client) : Promise<void> { }
 
     public toJSON() { 
         this.slash_cmd.setName(this.name);
