@@ -55,8 +55,8 @@ export class AboutCommand extends Command {
     }
 
     // TODO: add stats to it or somethin
-    public async execute(interaction : CommandInteraction, client : Client) {
-        var uptime = client.uptime ?? 0;
+    public async execute(interaction : CommandInteraction) {
+        var uptime = interaction.client.uptime ?? 0;
 
         const embed = new EmbedBuilder()
             .setTitle("the evil bot")
@@ -65,7 +65,7 @@ export class AboutCommand extends Command {
             .addFields(
               {
                 name: "total guilds",
-                value: client.guilds.cache.size.toString(),
+                value: interaction.client.guilds.cache.size.toString(),
                 inline: true
               },
               {
